@@ -26,8 +26,9 @@ func main() {
 	items := []list.Item{}
 	databases := conn.Databases(db)
 	for _, db := range databases {
-		items = append(items, db)
+		option := models.Option(db)
+		items = append(items, option)
 	}
 
-	models.DBList{}.New(items, "Select a Database: ")
+	models.Model{}.New(items, "Select a Database: ", true, true)
 }

@@ -13,68 +13,66 @@ var (
 	titleStyle      = lipgloss.NewStyle().MarginLeft(2)
 	paginationStyle = list.DefaultStyles().PaginationStyle.PaddingLeft(4)
 	helpStyle       = list.DefaultStyles().HelpStyle.PaddingLeft(4).PaddingBottom(1)
+	defaultWidth    = 20
+	listHeight      = 14
 )
 
-type DBList struct {
+type Model struct {
 	List     list.Model
 	choice   string
 	quitting bool
 }
 
-func (d DBList) Init() tea.Cmd {
+func (m Model) Init() tea.Cmd {
 	return nil
 }
 
-func (d DBList) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		d.List.SetWidth(msg.Width)
-		return d, nil
+		m.List.SetWidth(msg.Width)
+		return m, nil
 
 	case tea.KeyMsg:
 		switch keypress := msg.String(); keypress {
 		case "q", "ctrl+c":
-			d.quitting = true
-			return d, tea.Quit
+			m.quitting = true
+			return m, tea.Quit
 		case "enter":
-			i, ok := d.List.SelectedItem().(Option)
+			i, ok := m.List.SelectedItem().(Option)
 			if ok {
-				d.choice = string(i)
+				m.choice = string(i)
 			}
-			return d, tea.Quit
+			return m, tea.Quit
 		}
 	}
 	var cmd tea.Cmd
-	d.List, cmd = d.List.Update(msg)
-	return d, cmd
+	m.List, cmd = m.List.Update(msg)
+	return m, cmd
 }
 
-func (d DBList) View() string {
-	if d.choice != "" {
-		return quitTextStyle.Render(fmt.Sprintf("You chose: %s", d.choice))
+func (m Model) View() string {
+	if m.choice != "" {
+		return quitTextStyle.Render(fmt.Sprintf("You chose: %s", m.choice))
 	}
-	if d.quitting {
+	if m.quitting {
 		return quitTextStyle.Render("Session Exit")
 	}
 
-	return "\n" + d.List.View()
+	return "\n" + m.List.View()
 }
 
-func (d DBList) New(items []list.Item, title string) {
-	const defaultWidth = 20
-	const listHeight = 14
-
-	l := list.New(items, DatabaseDelegate{}, defaultWidth, listHeight)
+func (m Model) New(items []list.Item, title string, showCount bool, filterAllowed bool) {
+	l := list.New(items, Delegate{}, defaultWidth, listHeight)
 	l.Title = title
-	l.SetShowStatusBar(false)
-	l.SetFilteringEnabled(false)
+	l.SetShowStatusBar(showCount)
+	l.SetFilteringEnabled(filterAllowed)
 	l.Styles.Title = titleStyle
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
+	m.List = l
 
-	d.List = l
-
-	if _, err := tea.NewProgram(d).Run(); err != nil {
+	if _, err := tea.NewProgram(m).Run(); err != nil {
 		fmt.Println("Error running the program: ", err)
 		os.Exit(1)
 	}

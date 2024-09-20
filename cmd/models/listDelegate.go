@@ -10,7 +10,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-type DatabaseDelegate struct{}
+type Delegate struct{}
 
 var (
 	itemStyle         = lipgloss.NewStyle().MarginLeft(4)
@@ -18,10 +18,10 @@ var (
 	quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)
 )
 
-func (d DatabaseDelegate) Height() int                             { return 1 }
-func (d DatabaseDelegate) Spacing() int                            { return 0 }
-func (d DatabaseDelegate) Update(_ tea.Msg, _ *list.Model) tea.Cmd { return nil }
-func (d DatabaseDelegate) Render(w io.Writer, m list.Model, index int, listItem list.Item) {
+func (d Delegate) Height() int                             { return 1 }
+func (d Delegate) Spacing() int                            { return 0 }
+func (d Delegate) Update(_ tea.Msg, _ *list.Model) tea.Cmd { return nil }
+func (d Delegate) Render(w io.Writer, m list.Model, index int, listItem list.Item) {
 	i, ok := listItem.(Option)
 	if !ok {
 		return

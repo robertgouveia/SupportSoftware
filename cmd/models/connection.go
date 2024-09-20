@@ -48,7 +48,7 @@ func (c Connection) Open() (*Connection, *sql.DB) {
 	return conn, db
 }
 
-func (c *Connection) Databases(db *sql.DB) []Option {
+func (c *Connection) Databases(db *sql.DB) []string {
 	query := "SELECT name FROM sys.databases"
 
 	rows, err := db.Query(query)
@@ -57,14 +57,14 @@ func (c *Connection) Databases(db *sql.DB) []Option {
 	}
 	defer rows.Close()
 
-	databases := []Option{}
+	databases := []string{}
 
 	for rows.Next() {
 		var dbName string
 		if err := rows.Scan(&dbName); err != nil {
 			log.Fatalf("Unable to scan row: %v", err)
 		}
-		databases = append(databases, Option(dbName))
+		databases = append(databases, dbName)
 	}
 
 	return databases
