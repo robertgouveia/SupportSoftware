@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 type ImportList struct {
@@ -27,10 +26,7 @@ func (i ImportList) Get() []Import {
 	}
 
 	for _, file := range files {
-		f := filepath.Base(file.Name())
-		f = strings.TrimSuffix(f, ".sql")
-		f = strings.ReplaceAll(f, "_", " ")
-
+		f := ImportToName(file.Name())
 		i.Imports = append(i.Imports, Import{Name: f, Path: file.Name()})
 	}
 
