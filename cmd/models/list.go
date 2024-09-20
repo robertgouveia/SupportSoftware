@@ -15,6 +15,8 @@ var (
 	helpStyle       = list.DefaultStyles().HelpStyle.PaddingLeft(4).PaddingBottom(1)
 	defaultWidth    = 20
 	listHeight      = 14
+	outcome         func(string, lipgloss.Style) string
+	choice          string
 )
 
 type Model struct {
@@ -53,7 +55,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m Model) View() string {
 	if m.choice != "" {
-		return quitTextStyle.Render(fmt.Sprintf("You chose: %s", m.choice))
+		choice = m.choice
+		return outcome(m.choice, quitTextStyle)
 	}
 	if m.quitting {
 		return quitTextStyle.Render("Session Exit")
@@ -62,7 +65,7 @@ func (m Model) View() string {
 	return "\n" + m.List.View()
 }
 
-func (m Model) New(items []list.Item, title string, showCount bool, filterAllowed bool) {
+func (m Model) New(items []list.Item, title string, showCount bool, filterAllowed bool, outcomeInput func(string, lipgloss.Style) string) string {
 	l := list.New(items, Delegate{}, defaultWidth, listHeight)
 	l.Title = title
 	l.SetShowStatusBar(showCount)
@@ -72,8 +75,12 @@ func (m Model) New(items []list.Item, title string, showCount bool, filterAllowe
 	l.Styles.HelpStyle = helpStyle
 	m.List = l
 
+	outcome = outcomeInput
+
 	if _, err := tea.NewProgram(m).Run(); err != nil {
 		fmt.Println("Error running the program: ", err)
 		os.Exit(1)
 	}
+
+	return choice
 }

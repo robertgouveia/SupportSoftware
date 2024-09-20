@@ -4,7 +4,6 @@ import (
 	"database/cmd/models"
 	"log"
 
-	"github.com/charmbracelet/bubbles/list"
 	_ "github.com/denisenkom/go-mssqldb"
 	"github.com/joho/godotenv"
 )
@@ -23,12 +22,7 @@ func main() {
 		log.Fatalf("Could not connect to the database: %v", err)
 	}
 
-	items := []list.Item{}
-	databases := conn.Databases(db)
-	for _, db := range databases {
-		option := models.Option(db)
-		items = append(items, option)
-	}
+	choice := models.Question(conn.Databases(db), "You chose")
 
-	models.Model{}.New(items, "Select a Database: ", true, true)
+	log.Println(choice)
 }
