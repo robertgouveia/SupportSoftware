@@ -22,7 +22,7 @@ func main() {
 		log.Fatalf("Could not connect to the database: %v", err)
 	}
 
-	choice := models.Question(conn.Databases(db), "You chose")
+	_ = models.Question(conn.Databases(db), "You chose", true, true)
 
-	log.Println(choice)
+	_ = models.Question(models.ImportNames(models.ImportList{}.Get()), "You chose", false, false)
 }
