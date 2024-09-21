@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"database/cmd/models"
 	"log"
 	"os"
@@ -16,20 +15,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	file, err := os.Open("./connection/connection.txt")
-	if err != nil {
-		log.Fatalf("Unable to get connection list: %v", err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	connections := []string{}
-	for scanner.Scan() {
-		connection := scanner.Text()
-		connections = append(connections, os.Getenv("SERVER")+"."+connection)
-	}
-
-	os.Setenv("SERVER", models.Question(connections, "Select a Server", "You chose", true, true))
+	os.Setenv("SERVER", models.Question(models.GetConnections(), "Select a Server", "You chose", true, true))
 
 	conn, db := models.Connection{}.Open()
 	err = db.Ping()
