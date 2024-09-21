@@ -23,6 +23,9 @@ func main() {
 	defer db.Close()
 
 	os.Setenv("DATABASE", models.Question(conn.Databases(db), "You chose", true, true))
+	if os.Getenv("DATABASE") == "" {
+		return
+	}
 	conn, db = models.Connection{}.Open()
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v", err)
