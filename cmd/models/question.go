@@ -7,7 +7,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-func Question(items []string, message string, count, filter bool) string {
+func Question(items []string, title string, message string, count, filter bool) string {
 
 	data := []list.Item{}
 	for _, db := range items {
@@ -19,5 +19,5 @@ func Question(items []string, message string, count, filter bool) string {
 		return quitTextStyle.Render(fmt.Sprintf("%s: %s", message, choice))
 	}
 
-	return Model{}.New(data, "Select a Database: ", count, filter, outcome)
+	return Model{}.New(data, title, count, filter, outcome)
 }

@@ -29,7 +29,7 @@ func main() {
 		connections = append(connections, os.Getenv("SERVER")+"."+connection)
 	}
 
-	os.Setenv("SERVER", models.Question(connections, "You chose", true, true))
+	os.Setenv("SERVER", models.Question(connections, "Select a Server", "You chose", true, true))
 
 	conn, db := models.Connection{}.Open()
 	err = db.Ping()
@@ -38,7 +38,7 @@ func main() {
 	}
 	defer db.Close()
 
-	os.Setenv("DATABASE", models.Question(conn.Databases(db), "You chose", true, true))
+	os.Setenv("DATABASE", models.Question(conn.Databases(db), "Select a Database", "You chose", true, true))
 	conn, db = models.Connection{}.Open()
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v", err)
@@ -46,7 +46,7 @@ func main() {
 	defer db.Close()
 
 	imports := models.ImportList{}.Get()
-	queryName := models.Question(models.ImportNames(imports), "You chose", false, false)
+	queryName := models.Question(models.ImportNames(imports), "Select an Export", "You chose", false, false)
 
 	var sqlFile string
 	for _, i := range imports {
