@@ -59,6 +59,7 @@ func (m Model) View() string {
 		return outcome(m.choice, quitTextStyle)
 	}
 	if m.quitting {
+		os.Exit(0)
 		return quitTextStyle.Render("Session Exit")
 	}
 
