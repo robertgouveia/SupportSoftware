@@ -46,5 +46,5 @@ func main() {
 		log.Fatal("No SQL File Selected")
 	}
 
-	models.Execute(sqlFile, db)
+	models.Execute(sqlFile, db, queryName)
 }
