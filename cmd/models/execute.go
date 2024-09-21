@@ -33,7 +33,6 @@ func ExecuteSQL(sqlFile string, db *sql.DB, queryName string) {
 		line := scanner.Text()
 		if strings.HasPrefix(strings.TrimSpace(line), "DECLARE") {
 			parts := strings.Split(line, "=")
-			//DECLARE @ClientID INT = 0;
 			name := strings.Split(strings.Split(parts[0], "@")[1], " ")[0]
 			if len(parts) > 1 {
 				value := strings.ReplaceAll(strings.TrimSpace(parts[1]), ";", "")
@@ -46,11 +45,11 @@ func ExecuteSQL(sqlFile string, db *sql.DB, queryName string) {
 					log.Fatalf("Unable to write to temp file: %v", err)
 				}
 			}
-		} else {
-			_, err = writer.WriteString(line + "\n")
-			if err != nil {
-				log.Fatalf("Unable to write to temp file: %v", err)
-			}
+			continue
+		}
+		_, err = writer.WriteString(line + "\n")
+		if err != nil {
+			log.Fatalf("Unable to write to temp file: %v", err)
 		}
 	}
 
