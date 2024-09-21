@@ -62,7 +62,7 @@ func Execute(sqlFile string, db *sql.DB, queryName string) {
 
 	var outputName string
 	outputName += strings.ReplaceAll(queryName, " ", "_") + "_"
-	outputName += time.Now().Format("2006-01-02-15-04-05")
+	outputName += time.Now().Format("2006-01-02_15-04-05")
 
 	file, err := os.Create("./exports/" + outputName + ".csv")
 	if err != nil {
@@ -94,7 +94,6 @@ func Execute(sqlFile string, db *sql.DB, queryName string) {
 			log.Printf("Unable to print line: %v, skipping", err)
 			continue
 		}
-
 	}
 
 	writer.Flush()
