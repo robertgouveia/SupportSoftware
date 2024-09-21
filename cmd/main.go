@@ -43,7 +43,7 @@ func main() {
 	}
 
 	if sqlFile == "" {
-		log.Fatal("Unable to find SQL File")
+		log.Fatal("No SQL File Selected")
 	}
 
 	models.Execute(sqlFile, db)
